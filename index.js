@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const app = express();
 
 const dbUrl = 'mongodb+srv://amanda280721:hBxAeKKuJnWl7EMr@cluster0.tb3bspx.mongodb.net';
@@ -40,10 +40,10 @@ async function main() {
         res.send(item);
     });
 
-    app.get('/item/:id', (req, res) => {
+    app.get('/item/:id', async (req, res) => {
         const id = req.params.id;
 
-        const item = lista[id - 1];
+        const item = await collection.findOne({ _id: new ObjectId(id) })
         res.send(item);
     });
 

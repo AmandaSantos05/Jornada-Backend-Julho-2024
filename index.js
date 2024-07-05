@@ -25,8 +25,13 @@ async function main() {
 
     const lista = ['Rick Sanchez', 'Morty Smith', 'Summer Smith'];
 
-    app.get('/item', (req, res) => {
-        res.send(lista);
+    const db = client.db(dbName);
+    const collection = db.collection('item');
+
+    // Read All - [GET] /item
+    app.get('/item', async (req, res) => {
+        const documentos = await collection.find().toArray();
+        res.send(documentos);
     });
 
     app.post('/item', (req, res) => {

@@ -1,42 +1,57 @@
 const express = require('express');
+const { MongoClient } = require('mongodb');
 const app = express();
 
-app.use(express.json());
+const dbUrl = 'mongodb+srv://amanda280721:hBxAeKKuJnWl7EMr@cluster0.tb3bspx.mongodb.net';
+const dbName = 'ocean-jornada-backend';
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+const client = new MongoClient(dbUrl);
 
-app.get('/oi', (req, res) => {
-    res.send('Olá Mundo!');
-});
+async function main() {
 
-const lista = ['Rick Sanchez', 'Morty Smith', 'Summer Smith'];
+    console.log('Conectando ao banco de dados...');
+    client.connect();
+    console.log('Banco de dados conectado com sucesso!');
 
-app.get('/item', (req, res) => {
-    res.send(lista);
-});
+    app.use(express.json());
 
-app.post('/item', (req, res) => {
-    const item = req.body.nome;
-    lista.push(item);
-    res.send('Item criado com sucesso!');
-});
+    app.get('/', (req, res) => {
+        res.send('Hello World!');
+    });
 
-app.get('/item/:id', (req, res) => {
-    const id = req.params.id;
+    app.get('/oi', (req, res) => {
+        res.send('Olá Mundo!');
+    });
 
-    const item = lista[id - 1];
-    res.send(item);
-});
+    const lista = ['Rick Sanchez', 'Morty Smith', 'Summer Smith'];
 
-app.put('/item/:id', (req, res) => {
-    const id = req.params.id;
+    app.get('/item', (req, res) => {
+        res.send(lista);
+    });
 
-    const novoItem = req.body.nome;
+    app.post('/item', (req, res) => {
+        const item = req.body.nome;
+        lista.push(item);
+        res.send('Item criado com sucesso!');
+    });
 
-    lista[id - 1] = novoItem;
-    res.send('Item atualizado com sucesso!');
-})
+    app.get('/item/:id', (req, res) => {
+        const id = req.params.id;
 
-app.listen(3000);
+        const item = lista[id - 1];
+        res.send(item);
+    });
+
+    app.put('/item/:id', (req, res) => {
+        const id = req.params.id;
+
+        const novoItem = req.body.nome;
+
+        lista[id - 1] = novoItem;
+        res.send('Item atualizado com sucesso!');
+    })
+
+    app.listen(3000);
+}
+
+main()

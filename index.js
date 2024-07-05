@@ -47,13 +47,24 @@ async function main() {
         res.send(item);
     });
 
-    app.put('/item/:id', (req, res) => {
+    app.put('/item/:id', async (req, res) => {
         const id = req.params.id;
 
-        const novoItem = req.body.nome;
+        const novoItem = req.body;
 
-        lista[id - 1] = novoItem;
+        await collection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: novoItem }
+        )
         res.send('Item atualizado com sucesso!');
+    })
+
+    app.delete('/item/:id', async (req, res) => {
+        const id = req.params.id;
+
+        await collection.deleteOne({ _id: new ObjectId(id) })
+
+        res.send('Item removido com sucesso!')
     })
 
     app.listen(3000);

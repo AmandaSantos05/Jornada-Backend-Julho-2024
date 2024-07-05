@@ -34,10 +34,10 @@ async function main() {
         res.send(documentos);
     });
 
-    app.post('/item', (req, res) => {
-        const item = req.body.nome;
-        lista.push(item);
-        res.send('Item criado com sucesso!');
+    app.post('/item', async (req, res) => {
+        const item = req.body;
+        await collection.insertOne(item);
+        res.send(item);
     });
 
     app.get('/item/:id', (req, res) => {
